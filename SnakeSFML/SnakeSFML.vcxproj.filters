@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\Aplikacja.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Aplikacja.h" />
+    <ClInclude Include="src\Biblioteki.h" />
+    <ClInclude Include="src\Menu.h" />
+  </ItemGroup>
+</Project>
