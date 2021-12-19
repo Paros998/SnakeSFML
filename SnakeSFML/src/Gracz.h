@@ -8,7 +8,8 @@ struct Lista
 	struct Lista* nast, * poprz;
 	Lista()
 	{
-		x = y = 0;
+		x = START_X;
+		y = START_Y;
 		nast = poprz = NULL;
 	}
 };
@@ -16,12 +17,13 @@ struct Lista
 class Gracz
 {
 	int kierunek;
-	float szybkosc, czasomierz, opoznienie;
+	float szybkosc, opoznienie,czas;
 	Texture graczCialoTekstura, graczGlowaTekstura;
 	Sprite* graczSprite;
-	Clock zegar;
 
 public:
+	Clock zegar;
+	float czasomierz;
 	struct Lista* wsk_listy;
 
 public:
@@ -29,11 +31,15 @@ public:
 	~Gracz();
 	void dodajElement();
 	void rysuj(RenderWindow& okno);
-	void obsluguj();
+	void obsluguj(Sprite* dziuraSprite, int liczbaDziur, Sprite* przeszkodaSprite, int liczbaPrzeszkod);
+	bool walnijPrzeszkode(Sprite* przeszkodaSprite, int liczbaPrzeszkod);
 
 private:
-	void ruchGracza();
+	void przejdzPrzezDziure(Sprite* dziuraSprite, int liczbaDziur);
+	void ruchGracza(Sprite* dziuraSprite, int liczbaDziur, Sprite* przeszkodaSprite, int liczbaPrzeszkod);
 	void sterowanie();
 	void przejdzNaKoniecListy(Lista **wskaznik);
+	void przejdzPrzezSciane();
+
 };
 

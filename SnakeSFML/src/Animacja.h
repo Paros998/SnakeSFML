@@ -1,20 +1,20 @@
 #pragma once
 #include "Biblioteki.h"
 
+class Gracz;
+
 class Animacja
 {
-private:
-	float calkowityCzas, czasZmiany, deltaCzas;
+	float czasZmiany, deltaCzas;
 	Vector2u aktualnyObraz, liczbaObrazow;
-	Clock zegar;
-	IntRect obszar;
+	float x = 0.0f, y = 0.0f;
 
-protected:
-	Texture animacjaTekstura;
-	Sprite animacjaSprite;
+public:
+	IntRect obszar;
+	Clock zegar;
+	float calkowityCzas;
 	
 public:
-	Animacja(string sciezkaPliku, Vector2u liczbaObrazow, float czasZmiany);
+	Animacja(Texture& spriteTekstura, Vector2u liczbaObrazow, float czasZmiany);
 	void aktualizuj(int wiersz);
-	void rysujAnimacje(RenderWindow& okno);
 };
