@@ -4,10 +4,29 @@
     <ClCompile Include="src\Aplikacja.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\Animacja.cpp" />
+    <ClCompile Include="src\Biblioteki.cpp" />
+    <ClCompile Include="src\Gra.cpp" />
+    <ClCompile Include="src\gracz.cpp" />
+    <ClCompile Include="src\Koniec.cpp" />
+    <ClCompile Include="src\Pokarm.cpp" />
+    <ClCompile Include="src\Poziom1.cpp" />
+    <ClCompile Include="src\Poziom2.cpp" />
+    <ClCompile Include="src\Poziom3.cpp" />
+    <ClCompile Include="src\Punkty.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Aplikacja.h" />
     <ClInclude Include="src\Biblioteki.h" />
     <ClInclude Include="src\Menu.h" />
+    <ClInclude Include="src\Animacja.h" />
+    <ClInclude Include="src\Gra.h" />
+    <ClInclude Include="src\Gracz.h" />
+    <ClInclude Include="src\Koniec.h" />
+    <ClInclude Include="src\Pokarm.h" />
+    <ClInclude Include="src\Poziom1.h" />
+    <ClInclude Include="src\Poziom2.h" />
+    <ClInclude Include="src\Poziom3.h" />
+    <ClInclude Include="src\Punkty.h" />
   </ItemGroup>
 </Project>

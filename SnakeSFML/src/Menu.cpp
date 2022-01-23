@@ -1,14 +1,13 @@
 #include "Menu.h"
 
 enum wyborMenu  {START,OPCJE,WYNIKI,TWORCY,WYJSCIE};
-enum wyborPodstronyMenu {GLOWNA,POSTART,POOPCJE,POWYNIKI,POTWORCY,WYBORPOZIOMU};
-enum wyborPoStart {POZIOM1,POZIOM2,POZIOM3,WSTECZ};
+enum wyborPodstronyMenu {GLOWNA,POSTART,POOPCJE,POWYNIKI,POTWORCY,PRZEDGRA};
+enum wyborPoStart {DALEJ,WSTECZ};
 enum wyborPoWynikiPoTworcy {POWROT};
 enum opcjeTekst {STEROWANIE,GORA,DOL,PRAWO,LEWO,USTAWIENIA,MUZYKA,EKRAN,PELNY,RAMKA,WSTEC};
 
 Menu::Menu()
 {
-    poziomMuzyki = 15.0f;
     kierunekTla = 0, aktualnyWyborMenu = START, podstronaMenu = GLOWNA, iloscWynikow = 0, numerMuzyki = 0;
     procX = 1.0, procY = 1.0;
     menuTekstura.loadFromFile("data/Obrazy menu/menuSnake.png");
@@ -80,6 +79,54 @@ Menu::Menu()
     opcjeText = new Text[11];
     wynikiText = new Text[5];
 
+    teksturaSprite = new Texture[6];
+    tablicaSprite = new Sprite[6];
+
+    teksturaSprite[0].loadFromFile("data/Obrazy menu/jablko_animacja2.png");
+    teksturaSprite[0].setSmooth(true);
+    tablicaSprite[0].setTexture(teksturaSprite[0]);
+    tablicaSprite[0].setScale(0.26f, 0.26f);
+
+    teksturaSprite[1].loadFromFile("data/Obrazy menu/jablko_animacja2-gold.png");
+    teksturaSprite[1].setSmooth(true);
+    tablicaSprite[1].setTexture(teksturaSprite[1]);
+    tablicaSprite[1].setScale(0.26f, 0.26f);
+
+    teksturaSprite[2].loadFromFile("data/Sprity do gry/Plansza/dziura.png");
+    teksturaSprite[2].setSmooth(true);
+    tablicaSprite[2].setTexture(teksturaSprite[2]);
+    tablicaSprite[2].setScale(1.0, 1.0);
+
+    teksturaSprite[3].loadFromFile("data/Sprity do gry/Plansza/przeszkoda1.png");
+    teksturaSprite[3].setSmooth(true);
+    tablicaSprite[3].setTexture(teksturaSprite[3]);
+    tablicaSprite[3].setScale(1.0, 1.0);
+
+    teksturaSprite[4].loadFromFile("data/Sprity do gry/Plansza/kamien3.png");
+    teksturaSprite[4].setSmooth(true);
+    tablicaSprite[4].setTexture(teksturaSprite[4]);
+    tablicaSprite[4].setScale(1.0, 1.0);
+
+    teksturaSprite[5].loadFromFile("data/Sprity do gry/Gracz i przedmioty/snake_glowa12.png");
+    teksturaSprite[5].setSmooth(true);
+    tablicaSprite[5].setTexture(teksturaSprite[5]);
+    tablicaSprite[5].setScale(1.0, 1.0);
+
+    for (int i = 0; i < 2; i++)
+    {
+        tablicaSprite[i].setPosition(300, ((i + 1) * 70.0 + 250.0));
+        Rect<float> rozmiar = tablicaSprite[i].getGlobalBounds();
+        tablicaSprite[i].setOrigin(Vector2f(rozmiar.width / 2.0f, rozmiar.height / 2.0f));
+    }
+
+    for (int i = 2; i < 6; i++)
+    {
+        tablicaSprite[i].setPosition(325,( (i+1) * 80.0 + 250.0 ));
+        Rect<float> rozmiar = tablicaSprite[i].getGlobalBounds();
+        tablicaSprite[i].setOrigin(Vector2f(rozmiar.width / 2.0f, rozmiar.height / 2.0f));
+    }
+
+
     for (int i = 0; i < 5; i++)
     {
         wynikiText[i].setCharacterSize(40);
@@ -134,12 +181,12 @@ Menu::Menu()
     
     for (int i = 0; i < 4; i++)
     {
-    menuMuzyka[i].setVolume(poziomMuzyki);
+    menuMuzyka[i].setVolume(glosnoscMuzyki);
     }
 
     bufor.loadFromFile("data/Muzyka/misc_menu.wav");
     menuDzwiekWybor.setBuffer(bufor);
-    menuDzwiekWybor.setVolume(0.8f);
+    menuDzwiekWybor.setVolume(10.0f);
 
     bufor2.loadFromFile("data/Muzyka/misc_menu_2.wav");
 
@@ -193,15 +240,37 @@ void Menu::przygotujStrone()
     case POSTART:
         tablicaText[aktualnyWyborMenu].setFillColor(Color::Red);
         tablicaText[aktualnyWyborMenu].setOutlineColor(Color::Black);
-        tablicaText[POZIOM1].setString("POZIOM 1");
-        tablicaText[POZIOM2].setString("POZIOM 2");
-        tablicaText[POZIOM3].setString("POZIOM 3");
+        tablicaText[DALEJ].setString("DALEJ");
         tablicaText[WSTECZ].setString("WSTECZ");
+        tablicaText[DALEJ].setPosition(890, 250);
+        tablicaText[WSTECZ].setPosition(870, 850);
+        
+        opcjeText[0].setString("Ukoñcz poziomy jedzac jablka!");
+        opcjeText[0].setPosition(tablicaSprite[0].getPosition().x + 102.0f, tablicaSprite[0].getPosition().y);
+        opcjeText[1].setString("Nabijaj 5 kombo pod rzad i ciesz lepszymi punktami i ochrona!");
+        opcjeText[1].setPosition(tablicaSprite[1].getPosition().x + 102.0f, tablicaSprite[1].getPosition().y );
 
-        tablicaText[POZIOM1].setPosition(855, 250);
-        tablicaText[POZIOM2].setPosition(855, 400);
-        tablicaText[POZIOM3].setPosition(855, 550);
-        tablicaText[WSTECZ].setPosition(875, 700);
+        opcjeText[2].setString("Madrze korzystaj z systemu teleportacji dziurowej!");
+        opcjeText[2].setPosition(tablicaSprite[2].getPosition().x + 70.0f, tablicaSprite[2].getPosition().y - 20.0f);
+
+        opcjeText[3].setString("Unikaj lepiej tych drobiazgów o róznym wygladzie!");
+        opcjeText[3].setPosition(tablicaSprite[3].getPosition().x + 70.0f, tablicaSprite[3].getPosition().y - 20.0f);
+
+        opcjeText[4].setString("I nie bój siê wchodzic w sciany!");
+        opcjeText[4].setPosition(tablicaSprite[4].getPosition().x + 70.0f, tablicaSprite[4].getPosition().y - 20.0f);
+
+        opcjeText[5].setString("Lepiej nie kieruj swojej glodnej paszczy na wlasne cialo!");
+        opcjeText[5].setPosition(tablicaSprite[5].getPosition().x + 70.0f, tablicaSprite[5].getPosition().y - 20.0f);
+
+        for (int i = 0; i < 6; i++)
+        {
+            opcjeText[i].setCharacterSize(40);
+            opcjeText[i].setFont(czcionka);
+            opcjeText[i].setFillColor(Color::Black);
+            opcjeText[i].setOutlineColor(Color::Red);
+            opcjeText[i].setOutlineThickness(1.0f);
+        }
+
         break;
     case POOPCJE:
         for (int i = 0; i < 11; i++)
@@ -242,7 +311,7 @@ void Menu::przygotujStrone()
         minusSprite.setPosition(1270, 700);
 
         int procent;
-        procent =( poziomMuzyki / 30.0 )*100;
+        procent =( glosnoscMuzyki / 30.0 )*100;
         unsigned int znaki;
         
         linia = "";
@@ -285,8 +354,6 @@ void Menu::przygotujStrone()
         opcjeText[0].setPosition(760, 300);
         opcjeText[1].setString("Patryk Grzywacz");
         opcjeText[1].setPosition(760, 400);
-        opcjeText[2].setString("Adrian Pelka");
-        opcjeText[2].setPosition(810, 500);
 
         for (int i = 0; i < 11; i++)
         {
@@ -325,9 +392,14 @@ void Menu::rysuj(RenderWindow& okno)
     case POSTART:
         okno.draw(strzalkaSprite);
         przygotujStrone();
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
         {   
             okno.draw(tablicaText[i]);
+        }
+        for (int i = 0; i < 6; i++)
+        {
+            okno.draw(tablicaSprite[i]);
+            okno.draw(opcjeText[i]);
         }
         break;
     case POOPCJE:
@@ -353,14 +425,14 @@ void Menu::rysuj(RenderWindow& okno)
         okno.draw(opcjeText[WSTEC]);
         for (int i = 0; i < iloscWynikow; i++)
         {
-            wynikiText[i].setPosition(660,100+((i+1)*100));
+            wynikiText[i].setPosition(660,200+((i+1)*100));
             okno.draw(wynikiText[i]);
         }
         break;
     case POTWORCY:
         przygotujStrone();
         okno.draw(strzalkaSprite);
-        for(int i = 0; i < 3 ; i++)  okno.draw(opcjeText[i]);
+        for(int i = 0; i < 2 ; i++)  okno.draw(opcjeText[i]);
         okno.draw(opcjeText[WSTEC]);
         break;
     }
@@ -405,20 +477,16 @@ void Menu::aktualizacjaMenu()
         }
         tablicaText[aktualnyWyborMenu].setFillColor(Color::Red);
         tablicaText[aktualnyWyborMenu].setOutlineColor(Color::Black);
+
         switch (aktualnyWyborMenu)
         {
         case 0:
-            strzalkaSprite.setPosition(725, 206);
+            strzalkaSprite.setPosition(300, 206);
             break;
         case 1:
-            strzalkaSprite.setPosition(725, 366);
+            strzalkaSprite.setPosition(280, 806);
             break;
-        case 2:
-            strzalkaSprite.setPosition(725, 506);
-            break;
-        case 3:
-            strzalkaSprite.setPosition(725, 666);
-            break;
+       
         }
         break;
     case POOPCJE:
@@ -474,7 +542,7 @@ void Menu::ruchMyszka(int x,int y)
         }
         break;
     case POSTART:
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
         {
             String tekst = tablicaText[i].getString();
             int liczbaLiter = tekst.getSize();
@@ -537,7 +605,7 @@ void Menu::klikMyszka(int x, int y, RenderWindow& okno)
         }
         break;
     case POSTART:
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
         {
             String tekst = tablicaText[i].getString();
             int liczbaLiter = tekst.getSize();
@@ -576,22 +644,22 @@ void Menu::klikMyszka(int x, int y, RenderWindow& okno)
         obszar = IntRect(plusSprite.getPosition().x * procX, plusSprite.getPosition().y * procY,51 * procX,51 * procY);
         if (obszar.contains(x, y))
         {   
-            if (poziomMuzyki == 30.0f){}
+            if (glosnoscMuzyki == 30.0f){}
             else
             {
-                poziomMuzyki += 3.0f;
-                menuMuzyka[numerMuzyki].setVolume(poziomMuzyki);
+                glosnoscMuzyki += 3.0f;
+                menuMuzyka[numerMuzyki].setVolume(glosnoscMuzyki);
                 break;
             }
         } 
         obszar = IntRect(minusSprite.getPosition().x * procX, minusSprite.getPosition().y * procY,51 * procX,51 * procY);
         if (obszar.contains(x, y))
         {   
-            if (poziomMuzyki == 0.0f){}
+            if (glosnoscMuzyki == 0.0f){}
             else
             {
-                poziomMuzyki -= 3.0f;
-                menuMuzyka[numerMuzyki].setVolume(poziomMuzyki);
+                glosnoscMuzyki -= 3.0f;
+                menuMuzyka[numerMuzyki].setVolume(glosnoscMuzyki);
                 break;
             }
         }
@@ -661,18 +729,11 @@ void Menu::enter( RenderWindow& okno)
     case POSTART:
         switch (aktualnyWyborMenu)
         {
-        case POZIOM1:
+        case DALEJ:
             aktualnyWyborMenu = 0;
-            podstronaMenu = WYBORPOZIOMU;
+            podstronaMenu = PRZEDGRA;
             break;
-        case POZIOM2:
-            aktualnyWyborMenu = 1;
-            podstronaMenu = WYBORPOZIOMU;
-            break;
-        case POZIOM3:
-            aktualnyWyborMenu = 2;
-            podstronaMenu = WYBORPOZIOMU;
-            break;
+        
         case WSTECZ:
             aktualnyWyborMenu = 0;
             podstronaMenu = GLOWNA;
@@ -685,10 +746,14 @@ void Menu::enter( RenderWindow& okno)
         case PELNY:
             okno.create(VideoMode(1920, 1080), "Snake", Style::Fullscreen | Style::Close);
             okno.setFramerateLimit(60);
+            okno.setKeyRepeatEnabled(false);
+            aktualizacjaMenu();
             break;
         case RAMKA:
             okno.create(VideoMode(1920, 1080), "Snake", Style::Titlebar | Style::Close | Style::Resize);
             okno.setFramerateLimit(60);
+            okno.setKeyRepeatEnabled(false);
+            aktualizacjaMenu();
             break;
         case WSTEC:
             aktualnyWyborMenu = 0;
@@ -725,7 +790,7 @@ int Menu::start(RenderWindow& okno)
     while (okno.isOpen())
     {
         if (menuMuzyka[numerMuzyki].getStatus() == SoundStream::Stopped)
-        {   
+        {
             numerMuzyki++;
             if (numerMuzyki > 3)
             {
@@ -737,7 +802,7 @@ int Menu::start(RenderWindow& okno)
         Event zdarzenie;
         while (okno.pollEvent(zdarzenie))
         {
-            switch(zdarzenie.type)
+            switch (zdarzenie.type)
             {
                 // Case zdarzenie:
                 // Obs³uga zdarzenia
@@ -753,13 +818,13 @@ int Menu::start(RenderWindow& okno)
                 break;
             case Event::KeyPressed:
                 if (zdarzenie.key.code == Keyboard::Down)
-                {   
+                {
                     switch (podstronaMenu)
                     {
                     case GLOWNA:
                         if (aktualnyWyborMenu == WYJSCIE)
                             continue;
-                        else 
+                        else
                         {
                             aktualnyWyborMenu++;
                             aktualizacjaMenu();
@@ -807,7 +872,7 @@ int Menu::start(RenderWindow& okno)
                         }
                         break;
                     case POSTART:
-                        if (aktualnyWyborMenu == POZIOM1)
+                        if (aktualnyWyborMenu == DALEJ)
                             continue;
                         else
                         {
@@ -835,7 +900,7 @@ int Menu::start(RenderWindow& okno)
                     }
                 }
                 if (zdarzenie.key.code == Keyboard::Escape)
-                {   
+                {
                     if (podstronaMenu != GLOWNA)
                     {
                         aktualnyWyborMenu = 0;
@@ -852,18 +917,12 @@ int Menu::start(RenderWindow& okno)
                 if (zdarzenie.key.code == Keyboard::Enter)
                 {
                     enter(okno);
-                    if (podstronaMenu == WYBORPOZIOMU)
+                    if (podstronaMenu == PRZEDGRA)
                     {
                         switch (aktualnyWyborMenu)
                         {
                         case 0:
                             return 1;
-                            break;
-                        case 1:
-                            return 2;
-                            break;
-                        case 2:
-                            return 3;
                             break;
                         }
                     }
@@ -883,19 +942,13 @@ int Menu::start(RenderWindow& okno)
                     double x, y;
                     x = zdarzenie.mouseButton.x;
                     y = zdarzenie.mouseButton.y;
-                    klikMyszka(x, y,okno);
-                    if (podstronaMenu == WYBORPOZIOMU)
+                    klikMyszka(x, y, okno);
+                    if (podstronaMenu == PRZEDGRA)
                     {
                         switch (aktualnyWyborMenu)
                         {
                         case 0:
                             return 1;
-                            break;
-                        case 1:
-                            return 2;
-                            break;
-                        case 2:
-                            return 3;
                             break;
                         }
                     }
@@ -911,5 +964,5 @@ int Menu::start(RenderWindow& okno)
         rysuj(okno);
         okno.display();
     }
-	return 0;
+    return 0;
 }

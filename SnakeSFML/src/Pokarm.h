@@ -7,16 +7,20 @@ class Animacja;
 class Pokarm
 {
 	float x, y;
-private:
-	Texture pokarmTekstura;
-	Sprite pokarmSprite;
-	Animacja* animacja;
+	bool rysujEfekt;
+	Texture pokarmTekstura, efektTekstura;
+	Sprite pokarmSprite, efektSprite;
+	Animacja* animacja, * efektSpecjalny;
+	Vector2u klatkiEfektu;
 
 public:
-	Pokarm(string sciezkaPliku);
+	Pokarm(string sciezkaPliku, string sciezkaPlikuEfektu, Vector2u klatkiEfektu);
 	~Pokarm();
-	bool sprawdzCzyZjedzony(Gracz& gracz, Sprite ** plansza, Sprite* przeszkody,int liczbaprzeszkod);
+	bool sprawdzCzyZjedzony(Gracz& gracz);
 	void ustawPokarm(Gracz& gracz, Sprite** plansza, Sprite* przeszkody, int liczbaprzeszkod);
 	void rysuj(RenderWindow& okno);
+	void wyzerujAnimacje();
+	int wartoscPunktow;
+	int bonus;
 };
 

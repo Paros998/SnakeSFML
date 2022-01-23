@@ -14,30 +14,44 @@ struct Lista
 	}
 };
 
+class Animacja;
+
 class Gracz
 {
-	int kierunek;
-	float szybkosc, opoznienie,czas;
+	int kierunek,Poziom;
+	float szybkosc, opoznienie, mnoznikCzasu;
+	bool ustawTeksture;
 	Texture graczCialoTekstura, graczGlowaTekstura;
 	Sprite* graczSprite;
+	String tablicaStringCialoTekstura[3][8], tablicaKroki[3];
+	Sound dzwiekTeleport, dzwiekWalnieciePrzeszkody,dzwiekWalniecieSiebie,dzwiekKroki;
+	SoundBuffer buforTeleport, buforPrzeszkoda,buforWaz,buforKroki;
+	Animacja* animacjaCiala;
+	Time czasRuchu;
 
 public:
-	Clock zegar;
+	Clock zegar,zegarDzwieki;
 	float czasomierz;
 	struct Lista* wsk_listy;
+	int tekstura;
 
 public:
-	Gracz();
+	Gracz(int poziom);
 	~Gracz();
 	void dodajElement();
 	void rysuj(RenderWindow& okno);
 	void obsluguj(Sprite* dziuraSprite, int liczbaDziur, Sprite* przeszkodaSprite, int liczbaPrzeszkod);
 	bool walnijPrzeszkode(Sprite* przeszkodaSprite, int liczbaPrzeszkod);
+	bool samoUkaszenie();
+	void zerujAnimacje();
+	void ochronaKolizji();
+	void ustawNowaTeksture();
+	void ustawTeksture100();
 
 private:
+	void sterowanie();
 	void przejdzPrzezDziure(Sprite* dziuraSprite, int liczbaDziur);
 	void ruchGracza(Sprite* dziuraSprite, int liczbaDziur, Sprite* przeszkodaSprite, int liczbaPrzeszkod);
-	void sterowanie();
 	void przejdzNaKoniecListy(Lista **wskaznik);
 	void przejdzPrzezSciane();
 
