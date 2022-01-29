@@ -1,4 +1,12 @@
+/*!	\file Koniec.cpp
+*	\brief Plik ten zawiera ciala metod wykorzystywanych przez klase Koniec po zakonczeniu rozgrywki.
+*/
 #include "Koniec.h"
+
+Koniec::Koniec()
+{
+	wsk_wyniki = NULL;
+}
 
 string Koniec::wpiszNick(RenderWindow& okno,Font &czcionka,Sprite& tloMapySprite)
 {
@@ -20,16 +28,16 @@ string Koniec::wpiszNick(RenderWindow& okno,Font &czcionka,Sprite& tloMapySprite
 	int znaki = 0;
 	string linia = "Wpisz swoj nick i jesli jestes super graczem to wpiszemy cie do wynikow!";
 	znaki = linia.length();
-	TextKoncowy.setPosition(960 - (znaki / 2 * 20), 350);
+	TextKoncowy.setPosition(960.0f - (znaki / 2.0f * 20.0f), 350.0f);
 
 	znaki = 0;
 	linia = pseudonim;
 	znaki = linia.length();
-	Pseudonim.setPosition(960 - (znaki / 2 * 20), 450);
-	Time czas = seconds(0.5);
+	Pseudonim.setPosition(960.0f - (znaki / 2.0f * 20.0f), 450.0f);
+	Time czas = seconds(0.5f);
 	sleep(czas);
 	Clock czasOdOstatniejLitery;
-	float opoznienie = 0.15f, aktualnyCzas = 0.0f;;
+	float opoznienie = 0.15f, aktualnyCzas = 0.0f;
 	while (true)
 	{
 		okno.draw(tloMapySprite);
@@ -72,7 +80,7 @@ string Koniec::wpiszNick(RenderWindow& okno,Font &czcionka,Sprite& tloMapySprite
 		znaki = 0;
 		linia = pseudonim;
 		znaki = linia.length();
-		Pseudonim.setPosition(960 - (znaki / 2 * 20), 450);
+		Pseudonim.setPosition(960.0f - (znaki / 2.0f * 20.0f), 450.0f);
 		okno.display();
 	}
 	return pseudonim;
@@ -88,10 +96,14 @@ void Koniec::wynikiTXT(string& pseudonimGracza)
 
 	//Wczytywanie wyników z pliku do listy
 	if (wynikiPlik)
-	{
+	{	
 		while (i < 5 && wynikiPlik.eof() == false)
 		{
 			wynikiPlik >> pseudonim >> wynik;
+			if (pseudonim == "")
+			{
+				break;
+			}
 			ListaWynikow* new_node = new ListaWynikow;
 			new_node->pseudonim = pseudonim;
 			new_node->wynikGracza = wynik;
@@ -101,7 +113,7 @@ void Koniec::wynikiTXT(string& pseudonimGracza)
 				wsk_wyniki = new_node;
 				head->next = wsk_wyniki;
 			}
-			if (head->next != NULL)
+			else
 			{
 				wsk_wyniki->next = new_node;
 				wsk_wyniki = wsk_wyniki->next;
@@ -173,13 +185,22 @@ void Koniec::wynikiTXT(string& pseudonimGracza)
 
 	//Wstawianie z listy do pliku
 	i = 0;
-	if (wynikiPlik)
+	if (wynikiPlik2)
 	{
 		while (i < 5 && wsk_wyniki != NULL)
 		{
-			wynikiPlik2 << wsk_wyniki->pseudonim << "  " << wsk_wyniki->wynikGracza << endl;
-			wsk_wyniki = wsk_wyniki->next;
-			i++;
+			if (i == 4 || (wsk_wyniki->next == NULL))
+			{
+				wynikiPlik2 << wsk_wyniki->pseudonim << "  " << wsk_wyniki->wynikGracza ;
+				wsk_wyniki = wsk_wyniki->next;
+				i++;
+			}
+			else
+			{
+				wynikiPlik2 << wsk_wyniki->pseudonim << "  " << wsk_wyniki->wynikGracza << endl;
+				wsk_wyniki = wsk_wyniki->next;
+				i++;
+			}
 		}
 	}
 	wynikiPlik2.close();

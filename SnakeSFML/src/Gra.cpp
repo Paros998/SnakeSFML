@@ -1,4 +1,10 @@
-﻿#include "Biblioteki.h"
+﻿/*!	\file Gra.cpp
+*	\brief W tym pliku znajduja sie ciala metod oraz konstruktora a takze inicjalizacje zmiennych oraz tworzenie obiektow do dzialania silniku gry na podstawie klasy Gra.
+*/
+/*!	\enum opis_planszy { PIERWSZA_KRATKA, DRUGA_KRATKA,RAMKA }
+*	\brief Enumerator ulatwiajacy obsluge tablic obiektow
+*/
+#include "Biblioteki.h"
 
 enum opis_planszy { PIERWSZA_KRATKA, DRUGA_KRATKA,RAMKA };
 
@@ -10,7 +16,7 @@ Gra::Gra(int liczbaprzeszkod,int poziom,int warunek)
 	tablicaMuzyka[1] = "data/MuzykaDzwiekiGra/muzykaPoziom2.ogg";
 	tablicaMuzyka[2] = "data/MuzykaDzwiekiGra/muzykaPoziom3.ogg";
 	
-	czasZloteJablko = 5.0 - (POZIOM + 1.0);
+	czasZloteJablko = 5.0f - ((float)POZIOM + 1.0f);
 
 	procX = 1.0, procY = 1.0;
 
@@ -21,14 +27,14 @@ Gra::Gra(int liczbaprzeszkod,int poziom,int warunek)
 	dzwiekJedzenie.setBuffer(buforJedzenie);
 	dzwiekJedzenie.setVolume(10.0f);
 
-	srand(time(0));
+	srand((unsigned int)time(NULL));
 	planszaSprite = NULL;
 	wyborPauza = 0;
 	tablicaTekstur = new String[8];
 
 	wysokoscPlanszy = WYSOKOSC_PLANSZY;
 	dlugoscPlanszy = DLUGOSC_PLANSZY;
-	odstep = ODSTEP;
+	odstep = (unsigned int)ODSTEP;
 
 	tablicaTekstur[0] = "data/Sprity do gry/Plansza/kamien1.png";
 	tablicaTekstur[1] = "data/Sprity do gry/Plansza/trawa1.png";
@@ -47,13 +53,13 @@ Gra::Gra(int liczbaprzeszkod,int poziom,int warunek)
 	dziuraTekstura.setSmooth(true);
 
 	planszaSprite = new Sprite * [wysokoscPlanszy];
-	for (int i = 0; i < wysokoscPlanszy; i++)
+	for (unsigned int i = 0; i < wysokoscPlanszy; i++)
 	{
 		planszaSprite[i] = new Sprite[dlugoscPlanszy];
 	}
 
 	ramkaSprite = new Sprite * [wysokoscPlanszy +2];
-	for (int i = 0; i < wysokoscPlanszy +2; i++)
+	for (unsigned int i = 0; i < wysokoscPlanszy +2; i++)
 	{
 		ramkaSprite[i] = new Sprite[dlugoscPlanszy+2];
 	}
@@ -70,9 +76,9 @@ Gra::Gra(int liczbaprzeszkod,int poziom,int warunek)
 	}
 	else if (poziom == 1)
 	{
-		planszaTekstura[PIERWSZA_KRATKA].loadFromFile(tablicaTekstur[2]);
+		planszaTekstura[PIERWSZA_KRATKA].loadFromFile(tablicaTekstur[3]);
 		planszaTekstura[PIERWSZA_KRATKA].setSmooth(true);
-		planszaTekstura[DRUGA_KRATKA].loadFromFile(tablicaTekstur[3]);
+		planszaTekstura[DRUGA_KRATKA].loadFromFile(tablicaTekstur[2]);
 		planszaTekstura[DRUGA_KRATKA].setSmooth(true);
 		planszaTekstura[RAMKA].loadFromFile(tablicaTekstur[5]);
 		planszaTekstura[RAMKA].setSmooth(true);
@@ -104,8 +110,9 @@ Gra::Gra(int liczbaprzeszkod,int poziom,int warunek)
 	tablicaY = new int[liczbaPrzeszkod];
 	tablicaJ = new int[liczbaPrzeszkod];
 
-	RdzenPlansza = thread([&]() {obliczPozycje(); });
-	RdzenPlansza.join();
+	//RdzenPlansza = thread([&]() {obliczPozycje(); });
+	//RdzenPlansza.join();
+	obliczPozycje();
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -167,7 +174,7 @@ Gra::Gra(int liczbaprzeszkod,int poziom,int warunek)
 	wynikText.setScale(1.0f, 1.0f);
 	wynikString = "0/";
 	if (POZIOM + 1 != 3)wynikString += std::to_string(WARUNEK);
-	if (POZIOM + 1 == 3)wynikString += "∞";
+	if (POZIOM + 1 == 3)wynikString += std::to_string(236);
 	wynikText.setString(wynikString);
 	wynikText.setPosition(pucharSprite.getPosition().x + 32.0f, pucharSprite.getPosition().y - 24.0f);
 
@@ -180,13 +187,13 @@ Gra::~Gra()
 {
 	delete[] tablicaTekstur;
 
-	for (int i = 0; i < wysokoscPlanszy; i++)
+	for (unsigned int i = 0; i < wysokoscPlanszy; i++)
 	{
 		delete[] planszaSprite[i];
 	}
 	delete[] planszaSprite;
 
-	for (int i = 0; i < wysokoscPlanszy +2; i++)
+	for (unsigned int i = 0; i < wysokoscPlanszy +2; i++)
 	{
 		delete[] ramkaSprite[i];
 	}
@@ -198,7 +205,7 @@ Gra::~Gra()
 
 void Gra::obliczPozycje()
 {	
-	srand(time(0));
+	srand((unsigned)time(NULL));
 	for (unsigned int i = 0; i < dlugoscPlanszy; i++)
 		for (unsigned int j = 0; j < wysokoscPlanszy; j++)
 		{
@@ -484,7 +491,7 @@ void Gra::aktualizujStanGry(int wynikAktualny)
 	wynikString = std::to_string(wynikAktualny);
 	wynikString += "/";
 	if(POZIOM+1 != 3)wynikString += std::to_string(WARUNEK);
-	if (POZIOM + 1 == 3)wynikString += "∞";
+	if (POZIOM + 1 == 3)wynikString += std::to_string(236);;
 	wynikText.setString(wynikString);
 }
 
@@ -497,7 +504,7 @@ void Gra::pauzaPrzedGra(RenderWindow& okno,Gracz &gracz,Pokarm * pokarm)
 	pauzaText.setOutlineColor(Color::Red);
 	pauzaText.setFillColor(Color::Black);
 	pauzaText.setString("Nacisnij ENTER gdy bedziesz gotowy do gry!");
-	pauzaText.setPosition(okno.getSize().x/2 - (float)(11*40),okno.getSize().y/2 - 100);
+	pauzaText.setPosition(okno.getSize().x/2.0f - (float)(11*40),okno.getSize().y/2.0f - 100.0f);
 	while (true)
 	{
 		rysujPlansze(okno);
@@ -535,12 +542,12 @@ int Gra::silnikPoziomu(RenderWindow& okno,int poziom)
 	muzykaGra.play();
 	muzykaGra.setLoop(true);
 
-	float czasOdJedzenia = 0.0f, czasomierz = 0.0f, milisekunda = 1.0 / 60.0,czasOdAP = 0.0f,czasOdAK = 0.0f, aktualnyCzasOchrony = 0.0f,poprzedniCzasOchrony = 0.0f;
+	float czasOdJedzenia = 0.0f, czasomierz = 0.0f, milisekunda = 1.0f / 60.0f, czasOdAP = 0.0f, czasOdAK = 0.0f, aktualnyCzasOchrony = 0.0f,poprzedniCzasOchrony = 0.0f;
 	Gracz gracz(poziom);
 	Pokarm pokarm("data/Sprity do gry/Gracz i przedmioty/jablko_animacja2.png",
 		"data/Sprity do gry/Gracz i przedmioty/zjedz_jablko_animacja.png", Vector2u(24, 1));
 	Pokarm pokarmzloty("data/Sprity do gry/Gracz i przedmioty/jablko_animacja2-gold.png",
-		"data/Sprity do gry/Gracz i przedmioty/zlote_jablko_efekt.png", Vector2u(50, 1));
+		"data/Sprity do gry/Gracz i przedmioty/zlote_jablko_efekt.png", Vector2u(24, 1));
 	pokarmzloty.bonus = 1;
 	pokarmzloty.wartoscPunktow = 500;
 	Pokarm *wskaznikNaPokarm = &pokarm;
@@ -602,7 +609,7 @@ int Gra::silnikPoziomu(RenderWindow& okno,int poziom)
 				}
 			}
 		}
-		czasomierz = zegarRysowania.getElapsedTime().asMilliseconds();
+		czasomierz = (float)zegarRysowania.getElapsedTime().asMilliseconds();
 		if (czasomierz >= milisekunda)
 		{
 			// POKARM
