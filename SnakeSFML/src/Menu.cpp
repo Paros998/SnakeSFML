@@ -368,8 +368,6 @@ void Menu::przygotujStrone()
         opcjeText[0].setPosition(760, 300);
         opcjeText[1].setString("Patryk Grzywacz");
         opcjeText[1].setPosition(760, 400);
-        opcjeText[2].setString("Adrian Pelka");
-        opcjeText[2].setPosition(810, 500);
 
         for (int i = 0; i < 11; i++)
         {
